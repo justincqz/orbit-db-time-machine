@@ -24,6 +24,9 @@
 }
 
 .addressContainer {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   margin: 2vh;
   color: #b8d8fe99;
   font-family: monospace;
@@ -36,6 +39,9 @@
 }
 
 .titleContainer {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   font-family: 'Unica One', cursive;
   font-size: 18vh;
   margin-top: 5%;
@@ -64,6 +70,9 @@
   font-family: 'Unica One', sans-serif;
   font-size: 5vh;
   color:#89BEFC;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .loadTitle {

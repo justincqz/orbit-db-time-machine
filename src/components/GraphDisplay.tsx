@@ -36,7 +36,6 @@ const GraphDisplay: React.FC<{
   // TODO calculate this dynamically
   const heads = getNumberOfLeaves(inputData);
   const sequentialNodes = getDepth(inputData);
-
   const viewWidth = 300 * sequentialNodes;
   const viewHeight = heads * 100;
 

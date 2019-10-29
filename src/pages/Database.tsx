@@ -14,6 +14,7 @@ import JoinEvent from '../model/JoinEvent';
 import DAGNode from '../model/DAGNode';
 import JoinStorageProvider from '../providers/JoinStorageProvider';
 import JoinList from '../components/JoinList';
+import Copyable from '../components/Copyable';
 
 const DatabaseView: React.FC = withRouter(({ history }) => {
   // URL parameters
@@ -132,7 +133,9 @@ const DatabaseView: React.FC = withRouter(({ history }) => {
     ></JoinList>
     <div className={databaseStyles.container}>
       <div className={databaseStyles.addressContainer}>
-        Viewing: {`/orbitdb/${hash}/${name}`}
+        <Copyable copyText={`/orbitdb/${hash}/${name}`}>
+          Viewing: {`/orbitdb/${hash}/${name}`}
+        </Copyable>
       </div>
       <div className={databaseStyles.titleContainer}>Timeline</div>
       <GraphDisplay
