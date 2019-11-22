@@ -1,10 +1,5 @@
 import { NodeProvider } from "../providers/NodeProvider";
-
-interface D3DataOutput {
-  toD3Data(limit: number): D3Data;
-}
-
-export type D3Data = { id: string; children: D3Data[]; payload: any };
+import D3DataOutput, { D3Data, getTreeAtSplit }  from 'orbitdb-time-machine-logger/src/model/D3DataType';
 
 /** Returns the node with a hash */
 const findNode = function(hash: string, root: D3Data): D3Data {
@@ -74,19 +69,6 @@ const getNumberOfLeaves = function(root: D3Data): number {
   return root.children.reduce((acc, cur) => getNumberOfLeaves(cur) + acc, 0);
 };
 
-/** Get the first node of the tree where it splits into branches */
-const getTreeAtSplit = function(root: D3Data): D3Data {
-  if (root.children.length === 0) {
-    return null;
-  }
-
-  if (root.children.length >= 2) {
-    return root;
-  }
-
-  return getTreeAtSplit(root.children[0]);
-};
-
 /** Add user identities as payload to each d3data node */
 const addUserIdentities = async (root: D3Data, nodeProvider: NodeProvider) => {
   if (root.id === "EMPTY") {
@@ -126,4 +108,5 @@ export {
   addUserIdentities
 };
 
+export type D3Data = D3Data;
 export default D3DataOutput;

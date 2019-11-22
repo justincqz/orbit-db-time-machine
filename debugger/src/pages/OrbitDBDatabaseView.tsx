@@ -7,10 +7,7 @@ import { DatabaseProvider } from "../providers/DatabaseProvider";
 import { Store } from "orbit-db-store";
 import databaseStyles from './OrbitDBDatabaseView.module.css';
 import { withRouter } from 'react-router-dom';
-import OperationsLog from '../providers/OperationsLog';
-import JoinEvent from '../model/JoinEvent';
-import DAGNode from '../model/DAGNode';
-import JoinStorageProvider from '../providers/JoinStorageProvider';
+import JoinStorageProvider from 'orbitdb-time-machine-logger/src/providers/JoinStorageProvider';
 import Sidebar from '../components/viewDatabase/Sidebar';
 import OrbitDBStoreDisplay from '../components/OrbitDBStoreDisplay';
 import DatabaseUIProvider from '../providers/DatabaseUIProvider';
@@ -138,8 +135,6 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
   function listenForChanges() {
     console.log("listening");
     nodeProvider.current.listenForDatabaseGraph(() => {
-      recordJoinEvent(nodeProvider.current.getOperationsLog());
-
       loadData(true);
     });
 
@@ -148,17 +143,6 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
       console.log("Local write recorded!");
       loadData(true);
     });
-  }
-
-  function recordJoinEvent(newLog: OperationsLog) {
-    // Finds the earliest split node and returns a tree with it as root.
-    let D3DAG: D3Data = DAGNode.saveHeadsAsD3Data(newLog.getHeads());
-
-    // Ignoring straight forward joins that don't result in splits.
-    if (D3DAG != null) {
-      let newJoinEvent = new JoinEvent(D3DAG);
-      storageProvider.current.addJoinEvent(newJoinEvent);
-    }
   }
 
   async function loadData(forceLoad: boolean = false): Promise<void> {
@@ -219,7 +203,7 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
         </div>
         <div className={databaseStyles.numNodesContainer}>
           Display Limit:
-          <form 
+          <form
             onSubmit={handleLimitFormSubmit}
           >
             <input

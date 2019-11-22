@@ -1,4 +1,4 @@
-import D3DataOutput, {D3Data, getTreeAtSplit} from './D3Data';
+import D3DataOutput, {D3Data} from './D3DataType';
 
 export default class DAGNode implements D3DataOutput {
   nodeList: DAGNode[];
@@ -144,11 +144,5 @@ export default class DAGNode implements D3DataOutput {
     });
 
     return [rootNode];
-  }
-
-  static saveHeadsAsD3Data(heads: any[]): D3Data {
-    let DAGheads = this.createDAG(heads);
-    let D3DAG = DAGheads[0].toD3Data(Infinity);
-    return getTreeAtSplit(D3DAG);
   }
 }

@@ -1,4 +1,4 @@
-import { D3Data } from './D3Data';
+import { D3Data } from './D3DataType';
 
 export default class JoinEvent {
 
