@@ -1,0 +1,32 @@
+stages:
+  - name: frontend
+    # run on pull requests only
+    if: branch = master AND type = pull_request
+  - name: logger-api
+    if: branch = master AND type = pull_request
+
+
+jobs:
+  include:
+    - stage: frontend
+      name: test
+      language: node_js
+      node_js:
+       - 11
+      cache:
+        directories:
+        - debugger/node_modules
+      script:
+        - cd debugger && npm run build
+        - cd debugger && npm test
+    - stage: logger-api
+      name: test
+      language: node_js
+      node_js:
+       - 11
+      cache:
+        directories:
+        - logger/node_modules
+      script:
+        - cd logger && npm run build
+        - cd logger && npm test
