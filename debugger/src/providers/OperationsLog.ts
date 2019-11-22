@@ -1,9 +1,7 @@
-import DAGNode from '../model/DAGNode';
-
 export default interface OperationsLog {
   /**
    * @param operationsLog The operations log to compare with.
-   * 
+   *
    * Returns a JSON containing the log entries that
    * are present in this log, but not in the provided .
    */

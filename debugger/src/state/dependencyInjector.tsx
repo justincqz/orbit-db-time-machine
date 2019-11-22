@@ -3,8 +3,8 @@ import React, {createContext, useContext} from 'react';
 import {OrbitDBNodeProvider} from '../adapters/OrbitDBNodeProvider';
 import {DatabaseProvider} from '../providers/DatabaseProvider';
 import OrbitDBProvider from '../adapters/OrbitDBProvider';
-import JoinStorageProvider from 'orbitdb-time-machine-logger/src/providers/JoinStorageProvider';
-import LocalStoreageJoinProvider from 'orbitdb-time-machine-logger/src/adapters/LocalJoinStorageAdapter';
+import { JoinStorageProvider } from 'orbitdb-time-machine-logger';
+import { LocalStoreageJoinProvider } from 'orbitdb-time-machine-logger';
 
 // Injector to mock dependencies
 export interface Injector {

@@ -7,7 +7,7 @@ import { DatabaseProvider } from "../providers/DatabaseProvider";
 import { Store } from "orbit-db-store";
 import databaseStyles from './OrbitDBDatabaseView.module.css';
 import { withRouter } from 'react-router-dom';
-import JoinStorageProvider from 'orbitdb-time-machine-logger/src/providers/JoinStorageProvider';
+import { JoinStorageProvider } from 'orbitdb-time-machine-logger';
 import Sidebar from '../components/viewDatabase/Sidebar';
 import OrbitDBStoreDisplay from '../components/OrbitDBStoreDisplay';
 import DatabaseUIProvider from '../providers/DatabaseUIProvider';

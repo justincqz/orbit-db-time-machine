@@ -1,5 +1,5 @@
 import { NodeProvider } from "../providers/NodeProvider";
-import DAGNode from "orbitdb-time-machine-logger/src/model/DAGNode";
+import { DAGNode } from "orbitdb-time-machine-logger";
 import OperationsLog from '../providers/OperationsLog';
 import { OrbitDBOperationsLog } from "./OrbitDBOperationsLog";
 import { DatabaseProvider } from "../providers/DatabaseProvider";

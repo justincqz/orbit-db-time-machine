@@ -1,11 +1,11 @@
-import DAGNode from "../model/DAGNode";
+import { DAGNode } from "orbitdb-time-machine-logger";
 import OperationsLog from "./OperationsLog";
 
 export interface NodeProvider {
   getDatabaseGraph(): Promise<DAGNode>;
 
   listenForDatabaseGraph(cb: () => void): void;
-  
+
   /**
    * @param {() => void} cb The callback to run after intercepting a local write event.
    */
