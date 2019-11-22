@@ -4,6 +4,7 @@ import DAGNode from './model/DAGNode';
 import JoinEvent from './model/JoinEvent';
 import JoinStorageProvider from './providers/JoinStorageProvider';
 import LocalStoreageJoinProvider from './adapters/LocalJoinStorageAdapter';
+import Log from 'ipfs-log';
 
 /**
  * Class to log join events. The events can later be read by the time machine.
@@ -47,9 +48,9 @@ export default class Logger {
    * Record a new join event to the storage provider using the passed oplog.
    * @param newLog The current oplog
    */
-  private recordJoinEvent(newLog: any) {
+  private recordJoinEvent(newLog: Log) {
     // Finds the earliest split node and returns a tree with it as root.
-    let D3DAG: D3Data = this.saveHeadsAsD3Data(newLog.getHeads());
+    let D3DAG: D3Data = this.saveHeadsAsD3Data(newLog.heads);
 
     // Ignoring straight forward joins that don't result in splits.
     if (D3DAG != null) {
