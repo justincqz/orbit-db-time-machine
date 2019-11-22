@@ -36,7 +36,7 @@ export default class Logger {
   start(cb?: () => void) {
     this.store.events.on('replicated', () => {
       // Record the join event
-      this.recordJoinEvent(this.saveHeadsAsD3Data(this.store._oplog));
+      this.recordJoinEvent(this.store._oplog);
       // Notify listener for additional actions
       if (cb != null) {
         cb();
@@ -64,7 +64,7 @@ export default class Logger {
    * @param heads the array of heads from the oplog
    * @returns the d3data
    */
-  private saveHeadsAsD3Data(heads: any[]): D3Data {
+  private saveHeadsAsD3Data(heads: Array<string>): D3Data {
     let DAGheads = DAGNode.createDAG(heads);
     let D3DAG = DAGheads[0].toD3Data(Infinity);
     return getTreeAtSplit(D3DAG);
