@@ -26,6 +26,7 @@ export default class Logger {
     } else {
       this.storageProvider = new LocalStoreageJoinProvider();
     }
+    this.storageProvider.setDatabase(`${store.address.root}/${store.address.path}`);
   }
 
   /**
