@@ -67,7 +67,7 @@ export default class Logger {
    */
   private saveHeadsAsD3Data(heads: Array<string>): D3Data {
     let DAGheads = DAGNode.createDAG(heads);
-    let D3DAG = DAGheads[0].toD3Data(Infinity);
+    let D3DAG = DAGheads[0].toD3Data();
     return getTreeAtSplit(D3DAG);
   }
 

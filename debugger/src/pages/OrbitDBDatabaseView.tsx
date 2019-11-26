@@ -16,6 +16,7 @@ import KeyValueUI from '../components/databaseUi/KeyValueUI';
 import DocStoreUI from "../components/databaseUi/DocStoreUI";
 import OrbitDBDatabaseTypes from "../adapters/OrbitDBDatabaseTypes";
 import CounterStoreUI from "../components/databaseUi/CounterStoreUI";
+import FeedStoreUI from "../components/databaseUi/FeedStoreUI";
 
 /**
  * Implements the shared elements of database views.
@@ -35,8 +36,10 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
   let uiProvider: DatabaseUIProvider;
 
   // For display nodes limiting.
-  let nodeLimit: MutableRefObject<number> = useRef(10);
-  let limitInputRef = React.createRef<HTMLInputElement>();
+  let [nodeLimit, setNodeLimit]: [
+    number,
+    React.Dispatch<React.SetStateAction<number>>
+  ] = useState(10);
 
   const [loading, setLoading] = useState(true);
   const [d3data, setD3data]: [
@@ -67,11 +70,27 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
               s,
               dbProvider.current
             );
-            loadData();
-            if (!listening) {
-              setListening(true);
-              listenForChanges();
-            }
+
+            dbProvider.current.openDatabase(storageProvider.current.getStorageAddress())
+              .then((storage: Store) => {
+                  storageProvider.current.connectToStorage(storage);
+                  storageProvider.current.setUser(s._oplog._identity._id);
+                  if (!listening) {
+                    setListening(true);
+                    listenForChanges();
+                  }
+                  loadData();
+                })
+              .catch(_ => {
+                console.log("Saving in local storage...");
+                storageProvider.current = injector.createLocalJoinStorageProvider();
+                storageProvider.current.setDatabase(`${hash}/${name}`);
+                if (!listening) {
+                  setListening(true);
+                  listenForChanges();
+                }
+                loadData();
+              })
           })
           .catch(e => setError(e.toString()));
       });
@@ -87,15 +106,21 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
     if (selectedJoin === null) {
       loadData(true);
     } else {
-      nodeProvider.current.getDatabaseGraph().then(node => {
-        addUserIdentities(
-          viewJoinEvent(
-            node.toD3Data(nodeLimit.current),
-            storageProvider.current.getJoinEvent(selectedJoin).root
-          ),
-          nodeProvider.current
-        ).then((data) => {
-          setD3data(data)
+      nodeProvider.current.getDatabaseGraph(nodeLimit).then(nodes => {
+        nodes.reduce(async (rootNode, node) => {
+          (await rootNode).children.push(await addUserIdentities(
+            viewJoinEvent(
+              node.toD3Data(),
+              storageProvider.current.getJoinEvent(selectedJoin).root
+            ),
+            nodeProvider.current
+          ));
+          return rootNode;
+        }, Promise.resolve({id: "ROOT", children: [], payload: {}}))
+          .then((d3data) => {
+            // Remove ROOT node if there is only a single root
+            d3data = d3data.children.length === 1 ? d3data.children[0] : d3data;
+            setD3data(d3data);
         });
       });
     }
@@ -117,6 +142,9 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
       case OrbitDBDatabaseTypes.CounterStore:
         uiProvider = new CounterStoreUI();
         break;
+      case OrbitDBDatabaseTypes.FeedStore:
+        uiProvider = new FeedStoreUI();
+        break;
       default:
         throw new Error("Unsupported store type");
     }
@@ -124,11 +152,6 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
 
   function handleLimitFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const parsed = parseInt(limitInputRef.current.value);
-    if (!isNaN(parsed)) {
-      nodeLimit.current = parsed;
-    }
-
     loadData(true);
   }
 
@@ -145,6 +168,20 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
     });
   }
 
+  function handleLimitInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const parsed = parseInt(e.target.value);
+    if (!isNaN(parsed)) {
+      setNodeLimit(parsed);
+    }
+  }
+
+  // Prevent backspaces to prevent NaN inputs
+  function handleLimitInputKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e && e.keyCode === 8) {
+        e.preventDefault();
+    }
+  }
+
   async function loadData(forceLoad: boolean = false): Promise<void> {
     // Check whether we've already fetched the data. In the future, maybe diff?
     if ((d3data !== null && !forceLoad) || error !== "") {
@@ -152,12 +189,17 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
     }
     setLoading(true);
     try {
-      let childNode = await nodeProvider.current.getDatabaseGraph();
-      let d3Node = await addUserIdentities(
-        childNode.toD3Data(nodeLimit.current),
-        nodeProvider.current
-      );
-      setD3data(d3Node);
+      let childNodes = await nodeProvider.current.getDatabaseGraph(nodeLimit);
+      let d3data = await childNodes.reduce(async (rootNode, node) => {
+        (await rootNode).children.push(await addUserIdentities(
+            node.toD3Data(),
+          nodeProvider.current
+        ));
+        return rootNode;
+      }, Promise.resolve({id: "ROOT", children: [], payload: {}}));
+      // Remove ROOT node if there is only a single root
+      d3data = d3data.children.length === 1 ? d3data.children[0] : d3data;
+      setD3data(d3data);
     } catch (e) {
       setError(e.toString());
       throw e;
@@ -207,11 +249,12 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
             onSubmit={handleLimitFormSubmit}
           >
             <input
-              ref={limitInputRef}
               type="text"
               pattern="[0-9]*"
               title="Please only input numbers."
-              defaultValue={nodeLimit.current}
+              onChange={handleLimitInputChange}
+              onKeyDown={handleLimitInputKeyDown}
+              value={nodeLimit}
             />
           </form>
         </div>

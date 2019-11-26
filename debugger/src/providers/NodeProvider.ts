@@ -2,7 +2,7 @@ import { DAGNode } from "orbitdb-time-machine-logger";
 import OperationsLog from "./OperationsLog";
 
 export interface NodeProvider {
-  getDatabaseGraph(): Promise<DAGNode>;
+  getDatabaseGraph(limit: number): Promise<Array<DAGNode>>;
 
   listenForDatabaseGraph(cb: () => void): void;
 

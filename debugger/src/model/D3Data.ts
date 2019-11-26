@@ -3,7 +3,7 @@ import D3DataOutput, { D3Data, getTreeAtSplit }  from 'orbitdb-time-machine-logg
 
 /** Returns the node with a hash */
 const findNode = function(hash: string, root: D3Data): D3Data {
-  if (root.id === hash) {
+  if (root.payload.actualId === hash) {
     return root;
   }
   for (let node of root.children) {
@@ -22,7 +22,7 @@ const getFirstLeaf = function(root: D3Data): D3Data {
 
 /** Prunes root node (returns root until the node with hash) */
 const pruneDag = function(hash: string, root: D3Data): D3Data {
-  if (root.id === hash) {
+  if (root.payload.actualId === hash) {
     return { id: root.id, children: [], payload: root.payload };
   }
   root.children = root.children.map(c => pruneDag(hash, c));
@@ -40,7 +40,7 @@ const viewJoinEvent = function(root: D3Data, top: D3Data): D3Data {
   root = JSON.parse(JSON.stringify(root));
 
   // Prune the DAG to only the common nodes
-  let pruned = pruneDag(top.id, root);
+  let pruned = pruneDag(top.payload.actualId, root);
 
   // Get the end of the pruned DAG
   let leaf = getFirstLeaf(pruned);
@@ -76,7 +76,7 @@ const addUserIdentities = async (root: D3Data, nodeProvider: NodeProvider) => {
     return root;
   }
   async function addUserId(node: D3Data) {
-    let promise = nodeProvider.getNodeInfoFromHash(node.id);
+    let promise = nodeProvider.getNodeInfoFromHash(node.payload.actualId);
     for (let child of node.children) {
       addUserId(child);
     }

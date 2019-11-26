@@ -1,10 +1,10 @@
 import JoinStorageProvider from '../providers/JoinStorageProvider';
 import JoinEvent from '../model/JoinEvent';
 
-export default class LocalStoreageJoinProvider implements JoinStorageProvider {
+export default class LocalStorageJoinProvider implements JoinStorageProvider {
   currentDatabase = null;
 
-  setDatabase(id: string) {
+  setDatabase(id: string): void {
     this.currentDatabase = id;
   }
 
@@ -13,6 +13,24 @@ export default class LocalStoreageJoinProvider implements JoinStorageProvider {
       throw new Error("Local Storage not supported by browser.");
     }
     this.currentDatabase = null;
+  }
+
+  getStorageAddress(): string {
+    return "LOCAL";
+  }
+
+  connectToStorage(): void {
+  }
+
+  setUser(id: string): void {
+  }
+
+  getUserIds(): string[] {
+    return [];
+  }
+
+  getUserJoins(id: string): JoinEvent[] {
+    return [];
   }
 
   getJoins(): string[] {

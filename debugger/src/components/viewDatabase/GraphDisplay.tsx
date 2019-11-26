@@ -31,7 +31,7 @@ const GraphDisplay: React.FC<{
 
   const viewWidth = 300 * sequentialNodes;
   const viewHeight = heads * 100;
-  const minScroll = -viewWidth / 6;
+  const minScroll = -viewWidth / sequentialNodes;
   const maxScroll = viewWidth / 4;
 
   const colours = ['#555577FF', '#32a891', '#c7942e', '#ff8799', '#ad4949', '#6fd6d4'];
@@ -41,19 +41,19 @@ const GraphDisplay: React.FC<{
   // TODO: Find out types for d.
   function handleMouseEnter(d, domElement: Element) {
     if (mouseEvents !== undefined && mouseEvents.mouseenter !== undefined) {
-      mouseEvents.mouseenter(d.id, domElement);
+      mouseEvents.mouseenter(d.data.payload.actualId, domElement);
     }
   };
 
   function handleMouseLeave(d, domElement: Element) {
     if (mouseEvents !== undefined && mouseEvents.mouseleave !== undefined) {
-      mouseEvents.mouseleave(d.id, domElement);
+      mouseEvents.mouseleave(d.data.payload.actualId, domElement);
     }
   };
 
   function handleOnClick(d, domElement: Element) {
     if (mouseEvents !== undefined && mouseEvents.click !== undefined) {
-      mouseEvents.click(d.id, domElement);
+      mouseEvents.click(d.data.payload.actualId, domElement);
     }
   };
 
@@ -118,10 +118,6 @@ const GraphDisplay: React.FC<{
   function scrollSvg(e) {
     // const svgWidth = document.getElementsByClassName(graphStyles.graphContainer)[0].clientWidth;
     let offset = viewportOffset + e.deltaY
-    // // return if the svg is smaller than the viewport
-    // if (svgWidth + svgWidth / 2 > viewWidth) {
-    //   return;
-    // }
     if (offset < minScroll) {
       offset = minScroll;
     } else if (offset > maxScroll) {
@@ -141,7 +137,7 @@ const GraphDisplay: React.FC<{
 
   return (
     <div className={graphStyles.graphContainer}>
-      {(inputData.id !== "EMPTY" ?
+      {(inputData.payload.actualId !== "EMPTY" ?
         (<svg id='graph' width='100%' height='100%' viewBox={`${viewportOffset} 0 1000 300`} onWheel={scrollSvg}></svg>) :
         (<div className={graphStyles.emptyGraph}>No Logs Found!</div>)
       )}

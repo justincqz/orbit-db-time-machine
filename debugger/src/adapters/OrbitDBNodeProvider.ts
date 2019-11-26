@@ -25,16 +25,16 @@ export class OrbitDBNodeProvider implements NodeProvider {
     this.logger = new Logger(store);
   }
 
-  async getDatabaseGraph(): Promise<DAGNode> {
+  async getDatabaseGraph(limit: number): Promise<Array<DAGNode>> {
     // Read head of oplog
     let oplog: any = this.store._oplog;
     let heads: Array<any> = oplog.heads;
 
     if (heads.length === 0) {
-      return DAGNode.emptyDAG();
+      return [DAGNode.emptyDAG()];
     }
 
-    return DAGNode.createDAG(heads)[0];
+    return DAGNode.createDAG(heads, limit);
   }
 
   getOperationsLog(): OperationsLog {
