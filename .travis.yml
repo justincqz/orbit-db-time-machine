@@ -29,10 +29,7 @@ jobs:
         directories:
         - debugger/node_modules
       script:
-        - cd logger
-        - npm i
-        - npm run build
-        - cd ../debugger
+        - cd debugger
         - npm i
         - npm run build
         - npm test

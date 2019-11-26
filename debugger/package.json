@@ -13,7 +13,7 @@
     "ipfs": "^0.38.0",
     "orbit-db": "^0.22.0",
     "orbit-db-eventstore": "^1.6.0",
-    "orbitdb-time-machine-logger": "file:../logger",
+    "orbit-db-time-machine-logger": "^1.0.1",
     "react": "^16.10.2",
     "react-ace": "^8.0.0",
     "react-dom": "^16.10.2",
