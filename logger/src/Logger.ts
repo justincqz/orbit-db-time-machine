@@ -3,8 +3,8 @@ import { D3Data, getTreeAtSplit } from './model/D3DataType';
 import DAGNode from './model/DAGNode';
 import JoinEvent from './model/JoinEvent';
 import JoinStorageProvider from './providers/JoinStorageProvider';
-import LocalStoreageJoinProvider from './adapters/LocalJoinStorageAdapter';
 import Log from 'ipfs-log';
+import OrbitDBJoinProvider from './adapters/OrbitDBJoinProvider';
 
 /**
  * Class to log join events. The events can later be read by the time machine.
@@ -12,7 +12,7 @@ import Log from 'ipfs-log';
  */
 export default class Logger {
   private readonly store;
-  private readonly storageProvider;
+  private storageProvider;
 
   /**
    * Create a new logger
@@ -21,12 +21,11 @@ export default class Logger {
    */
   constructor(store: Store, storageProvider?: JoinStorageProvider) {
     this.store = store;
-    if (storageProvider != null) {
+    if (storageProvider !== undefined && storageProvider !== null) {
       this.storageProvider = storageProvider;
-    } else {
-      this.storageProvider = new LocalStoreageJoinProvider();
+      this.storageProvider.setUser(store._oplog._identity._id);
+      this.storageProvider.setDatabase(`${store.address.root}/${store.address.path}`);
     }
-    this.storageProvider.setDatabase(`${store.address.root}/${store.address.path}`);
   }
 
   /**
@@ -35,14 +34,30 @@ export default class Logger {
    * @param cb Optional callback function. Invoked when a join event is detected.
    */
   start(cb?: () => void) {
-    this.store.events.on('replicated', () => {
-      // Record the join event
-      this.recordJoinEvent(this.store._oplog);
-      // Notify listener for additional actions
-      if (cb != null) {
-        cb();
-      }
-    })
+    // Starts the logger
+    let run = () => {
+      this.store.events.on('replicated', () => {
+        // Record the join event
+        this.recordJoinEvent(this.store._oplog);
+        // Notify listener for additional actions
+        if (cb != null) {
+          cb();
+        }
+      })
+    }
+
+    // Check whether our storageProvider has been initialised
+    if (this.storageProvider === undefined || this.storageProvider === null) {
+      this.storageProvider = OrbitDBJoinProvider.connectOrReturnLocal().then((sp) => {
+        this.storageProvider = sp;
+        this.storageProvider.setUser(this.store._oplog._identity._id);
+        this.storageProvider.setDatabase(`${this.store.address.root}/${this.store.address.path}`);
+        run();
+      })
+    } else {
+      run();
+    }
+
   }
 
   /**

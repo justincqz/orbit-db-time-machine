@@ -1,19 +1,22 @@
-import { JoinStorageProvider, JoinEvent } from 'orbitdb-time-machine-logger';
+import JoinStorageProvider from '../providers/JoinStorageProvider';
+import JoinEvent from '../model/JoinEvent';
 import Store from 'orbit-db-store';
+import DatabaseProvider from '../providers/DatabaseProvider';
+import { OrbitDBAdapter, LocalStorageJoinProvider } from '..';
 
 export default class OrbitDBJoinProvider implements JoinStorageProvider {
   currentDatabase : string = null;
   currentUser : string = null;
   orbitDBStorage = null;
 
-  readonly storageAddress : string = "/orbitdb/zdpuApcbZpiyV3HU5ojrTMuvcBwfdewGQWqQgKU8NfuDUXafW/JoinStorage";
+  static readonly storageAddress : string = "/orbitdb/zdpuApcbZpiyV3HU5ojrTMuvcBwfdewGQWqQgKU8NfuDUXafW/JoinStorage";
 
   connectToStorage(s : Store): void {
     this.orbitDBStorage = s;
   }
 
   getStorageAddress(): string {
-    return this.storageAddress;
+    return OrbitDBJoinProvider.storageAddress;
   }
 
   setDatabase(id: string): void {
@@ -227,4 +230,29 @@ export default class OrbitDBJoinProvider implements JoinStorageProvider {
       throw new Error("Current user has not been set");
     }
   }
+
+  /**
+   * Attemt to connect to the remote storage database.
+   * If connection fails, use a local storage provider.
+   * @param dbProvider Optionally pass a DatabaseProvider
+   */
+  static async connectOrReturnLocal(dbProvider?: DatabaseProvider): Promise<JoinStorageProvider> {
+
+    if (dbProvider === undefined) {
+      dbProvider = await OrbitDBAdapter.build();
+    }
+
+    let storageProvider: JoinStorageProvider = new OrbitDBJoinProvider();
+
+    try {
+      let storage: Store = await dbProvider.openDatabase(OrbitDBJoinProvider.storageAddress);
+      storageProvider.connectToStorage(storage);
+    } catch (_) {
+      console.log("Saving in local storage...");
+      storageProvider = new LocalStorageJoinProvider();
+    }
+
+    return storageProvider;
+  }
+
 }

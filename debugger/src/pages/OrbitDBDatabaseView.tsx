@@ -54,11 +54,6 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
   ] = useState(null);
 
   useEffect(() => {
-    if (storageProvider.current === undefined) {
-      storageProvider.current = injector.createJoinStorageProvider();
-      storageProvider.current.setDatabase(`${hash}/${name}`);
-    }
-
     if (!dbProvider.current) {
       injector.createDBProvider().then(provider => {
         dbProvider.current = provider;
@@ -71,28 +66,19 @@ const OrbitDBDatabaseView: React.FC = withRouter(({ history }) => {
               dbProvider.current
             );
 
-            dbProvider.current.openDatabase(storageProvider.current.getStorageAddress())
-              .then((storage: Store) => {
-                  storageProvider.current.connectToStorage(storage);
-                  storageProvider.current.setUser(s._oplog._identity._id);
-                  if (!listening) {
-                    setListening(true);
-                    listenForChanges();
-                  }
-                  loadData();
-                })
-              .catch(_ => {
-                console.log("Saving in local storage...");
-                storageProvider.current = injector.createLocalJoinStorageProvider();
-                storageProvider.current.setDatabase(`${hash}/${name}`);
-                if (!listening) {
-                  setListening(true);
-                  listenForChanges();
-                }
-                loadData();
-              })
-          })
-          .catch(e => setError(e.toString()));
+            // Connect to a storage provider, local or network
+            injector.createJoinStorageProvider().then((sp) => {
+              console.log(sp)
+              storageProvider.current = sp;
+              storageProvider.current.setDatabase(`${hash}/${name}`);
+              storageProvider.current.setUser(s._oplog._identity._id);
+              if (!listening) {
+                setListening(true);
+                listenForChanges();
+              }
+              loadData();
+            })
+          }).catch(e => setError(e.toString()));
       });
     }
   });
