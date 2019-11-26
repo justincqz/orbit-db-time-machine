@@ -1,6 +1,6 @@
 {
   "name": "orbit-db-time-machine-logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Logger package for use with the orbitdb time machine",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,12 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "ipfs-log": "^4.4.0",
-    "orbit-db-store": "^2.7.1",
-    "typescript": "^3.7.2"
+    "orbit-db-store": "^2.7.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
     "jest": "^24.9.0",
-    "ts-jest": "^24.2.0"
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.2"
   }
 }
