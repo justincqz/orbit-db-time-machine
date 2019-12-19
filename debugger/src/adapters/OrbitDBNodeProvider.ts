@@ -1,5 +1,5 @@
 import { NodeProvider } from "../providers/NodeProvider";
-import { DAGNode } from "orbitdb-time-machine-logger";
+import { DAGNode } from "orbit-db-time-machine-logger";
 import OperationsLog from '../providers/OperationsLog';
 import { OrbitDBOperationsLog } from "./OrbitDBOperationsLog";
 import { DatabaseProvider } from "../providers/DatabaseProvider";
@@ -11,7 +11,7 @@ import FeedIndex from 'orbit-db-feedstore/src/FeedIndex';
 import CounterIndex from 'orbit-db-counterstore/src/CounterIndex';
 import DocumentIndex from 'orbit-db-docstore/src/DocumentIndex';
 import OrbitDBDatabaseTypes from "./OrbitDBDatabaseTypes";
-import Logger from 'orbitdb-time-machine-logger';
+import Logger from 'orbit-db-time-machine-logger';
 
 export class OrbitDBNodeProvider implements NodeProvider {
 

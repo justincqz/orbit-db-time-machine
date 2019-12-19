@@ -1,4 +1,4 @@
-import { DAGNode } from "orbitdb-time-machine-logger";
+import { DAGNode } from "orbit-db-time-machine-logger";
 import OperationsLog from "./OperationsLog";
 
 export interface NodeProvider {

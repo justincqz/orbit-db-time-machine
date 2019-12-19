@@ -6,7 +6,7 @@ import Log from 'ipfs-log';
 import * as OrbitDB from "orbit-db";
 import * as IPFS from "ipfs";
 import { OrbitDBOperationsLog } from "./OrbitDBOperationsLog";
-import { OrbitDBAdapter } from 'orbitdb-time-machine-logger';
+import { OrbitDBAdapter } from 'orbit-db-time-machine-logger';
 
 export default class OrbitDBProvider extends OrbitDBAdapter implements DatabaseProvider {
   private constructor(dbInstance: OrbitDB, ipfs: IPFS) {
