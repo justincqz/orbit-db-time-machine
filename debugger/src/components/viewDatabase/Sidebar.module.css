@@ -25,9 +25,17 @@
 }
 
 .info {
-  margin: 1.5vh;
-  font-size: 1.5vh;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  margin-left: 1.5vh;
+  margin-right: 1.5vh;
+  font-size: 1rem;
   font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap;      /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap;     /* Opera <7 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  word-wrap: break-word;      /* IE */
 }
 
 .addButton {
@@ -47,7 +55,7 @@
   border-width: 0;
   background-color: rgb(54, 118, 197);
   font-family: monospace;
-  font-size: 1.7vh;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   -moz-user-select: none;
@@ -91,7 +99,7 @@
   padding: 1vh;
   border-radius: 0 0 12px 12px;
   line-height: 3.5vh;
-  font-size: 2vh;
+  font-size: 1rem;
 }
 
 .inputFieldRow {
@@ -116,7 +124,7 @@
   color: #b8d8feff;
   margin: 0.5vh;
   font-family: monospace;
-  font-size: 1.5vh;
+  font-size: 1rem;
   width: 15vw;
   border: 0;
   border-bottom: 2px solid #b8d8fe33;
@@ -143,7 +151,7 @@
   border-width: 0;
   background-color: #1d5495ff;
   font-family: monospace;
-  font-size: 1.5vh;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   -moz-user-select: none;
@@ -163,7 +171,7 @@
   border-width: 0;
   background-color: #1d5495ff;
   font-family: monospace;
-  font-size: 1.5vh;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   -moz-user-select: none;
@@ -184,7 +192,7 @@
   border-width: 0;
   background-color: #0D3540;
   font-family: monospace;
-  font-size: 1.5vh;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   -moz-user-select: none;
