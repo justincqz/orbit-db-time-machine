@@ -18,8 +18,8 @@ jobs:
         - logger/node_modules
       script:
         - cd logger && npm i
-        - npm run build
         - npm test
+        - npm run build
     - stage: frontend
       name: test
       language: node_js
@@ -31,5 +31,5 @@ jobs:
       script:
         - cd debugger
         - npm i
-        - npm run build
         - npm test
+        - npm run build

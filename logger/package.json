@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ipfs": "^0.40.0",
     "ipfs-log": "^4.4.0",
+    "orbit-db": "^0.23.0",
     "orbit-db-store": "^2.7.1"
   },
   "devDependencies": {
