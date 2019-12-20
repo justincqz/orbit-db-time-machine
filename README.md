@@ -1,5 +1,7 @@
-# OrbitDB Time Machine
+# OrbitDB time machine
 
-[![Build Status](https://travis-ci.com/justincqz/orbit-db-time-machine.svg?branch=master)](https://travis-ci.com/justincqz/orbit-db-time-machine)
+Repository for orbitdb time machine.
 
-A logical time machine for OrbitDB
+`debugger` contains the GUI web application to debug your database
+
+`logger` contains the logger you can add to your own applications to start collecting debug data
