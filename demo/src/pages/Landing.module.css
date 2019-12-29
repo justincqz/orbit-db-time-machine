@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: row;
+}
+
+.chatBar {
+    display: flex;
+    height: 100vh;
+    flex-grow: 2;
+    padding: 5vw;
+    border-right-color:grey;
+    border-style:solid;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.userName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: darkgrey;
+}
+
+.noChatSelected {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+}
+
+.noChats {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    height: 5vh;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
+.chatBox {
+    display: flex;
+    height: 100vh;
+    flex-grow: 12;
+}
