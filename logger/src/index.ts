@@ -6,6 +6,7 @@ import DAGNode from "./model/DAGNode";
 import D3DataType, { getTreeAtSplit, D3Data } from "./model/D3DataType";
 import JoinEvent from "./model/JoinEvent";
 import OrbitDBAdapter from './adapters/OrbitDBAdapter';
+import DatabaseProvider from './providers/DatabaseProvider';
 
 export default Logger;
 export {
@@ -17,5 +18,6 @@ export {
   DAGNode,
   JoinEvent,
   OrbitDBJoinProvider,
-  OrbitDBAdapter
+  OrbitDBAdapter,
+  DatabaseProvider
 };

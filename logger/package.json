@@ -1,6 +1,6 @@
 {
   "name": "orbit-db-time-machine-logger",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Logger package for use with the orbitdb time machine",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
