@@ -1,7 +1,7 @@
 
 export default class UserStorageProvider {
 
-  storageAddress = "/orbitdb/zdpuAqM319xtPjZaPcBaLLH7ZbEHpU4t3q38fWPgfxqeW2KqU/user-store";
+  storageAddress = "/orbitdb/zdpuAvcRgSmRrWXTAE8jHd43soqNhQotzTfA82tX3UaMfGwii/UserStore";
   currentUser = "";
   orbitDBStorage;
 
@@ -17,8 +17,31 @@ export default class UserStorageProvider {
     this.orbitDBStorage = s;
   }
 
+  getAllUsers() {
+    return this.orbitDBStorage.get('').map(
+      c => c._id
+    );
+  }
+
+  addUserChat(user, chat) {
+    let userInfo = this.orbitDBStorage.get(user)[0];
+    let userChats = userInfo.chats;
+    userChats.push(chat);
+    this.orbitDBStorage.put({"_id": user, "chats": userChats});
+    console.log(this.orbitDBStorage.get(""));
+  }
+
+  addUser() {
+    let matches = this.orbitDBStorage.get(this.currentUser);
+    console.log(matches);
+    if (matches.length === 0) {
+      console.log("here");
+      this.orbitDBStorage.put({"_id": this.currentUser, chats: []});
+    }
+  }
+
   async getUserChats() {
-    let userChats = this.orbitDBStorage.get('');
+    let userChats = this.orbitDBStorage.get(this.currentUser);
     console.log(this.orbitDBStorage._oplog);
     console.log(userChats);
     if (userChats.length === 0) {

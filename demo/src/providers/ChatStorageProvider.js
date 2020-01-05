@@ -1,7 +1,7 @@
 
 export default class ChatStorageProvider {
 
-  storageAddress = "/orbitdb/zdpuB3XCdYdx572JtfnjKS6HidCDL8qDMxdgHdgjWD2yssygV/chat-storage";
+  storageAddress = "/orbitdb/zdpuAyR71qFrcfKkZ3x8Zn6Lzq66s9Rd2T4iTm25KtfS1odBx/ChatStore";
   currentChat = "";
   orbitDBStorage;
 
@@ -13,15 +13,27 @@ export default class ChatStorageProvider {
     this.orbitDBStorage = s;
   }
 
-  async getChat() {
-    let chat = this.orbitDBStorage.get('');
+  createNewChat(name, members) {
+    this.orbitDBStorage.put({
+      "_id": name,
+      "members": members,
+      "data": []
+    });
+  }
+
+  updateChat(chat) {
+    this.orbitDBStorage.put(chat);
+  }
+
+  getChat(c) {
+    let chat = this.orbitDBStorage.get(c);
     console.log(this.orbitDBStorage._oplog);
     console.log(chat);
     if (chat.length === 0) {
       return [];
     }
 
-    return chat[0].data;
+    return chat[0];
   }
 
   listenForSync(cb) {

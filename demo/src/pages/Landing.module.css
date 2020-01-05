@@ -45,3 +45,10 @@
     height: 100vh;
     flex-grow: 12;
 }
+
+.newChat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: darkgrey solid;
+}
