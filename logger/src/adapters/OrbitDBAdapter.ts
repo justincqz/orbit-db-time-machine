@@ -27,6 +27,7 @@ const ipfsOptions = {
 export default class OrbitDBAdapter implements DatabaseProvider {
   protected readonly dbInstance: OrbitDB;
   protected readonly ipfs: IPFS;
+  protected static IPFS: IPFS;
 
   protected constructor(dbInstance: OrbitDB, ipfs: IPFS) {
     this.dbInstance = dbInstance;
@@ -40,7 +41,11 @@ export default class OrbitDBAdapter implements DatabaseProvider {
 
   protected static async newDBInstance(): Promise<[OrbitDB, IPFS]> {
     // Creates an IPFS instance and waits till its ready
-    const ipfs: IPFS = new IPFS(ipfsOptions);
+    if (OrbitDBAdapter.IPFS === undefined || OrbitDBAdapter.IPFS === null) {
+      console.log("creating ipfs instance")
+      OrbitDBAdapter.IPFS = new IPFS(ipfsOptions)
+    }
+    const ipfs = OrbitDBAdapter.IPFS;
     await ipfs.ready;
     const db = await OrbitDB.createInstance(ipfs);
 
@@ -74,6 +79,6 @@ export default class OrbitDBAdapter implements DatabaseProvider {
   }
 
   async close(): Promise<void> {
-    this.ipfs.stop();
+    //this.ipfs.stop();
   }
 }
