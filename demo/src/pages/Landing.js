@@ -21,12 +21,10 @@ const Landing = (props) => {
     const [popupOpen, setPopupOpen] = useState(false);
     const [input, setInput] = useState("");
 
-    const refresh = (c) => {
+    const refresh = () => {
       let chatInfo = chatProvider.current.getChat();
-      let chatData = chatInfo.data;
-      setChatInfo(chatData);
-    }
-
+      setChatInfo(chatInfo);
+    };
 
     function typeNewInput(e) {
       e.preventDefault();
@@ -56,13 +54,10 @@ const Landing = (props) => {
       handleClosePopup();
     }
 
-    function getUserChats() {
-      userProvider.current.getUserChats().then(
-        cs => {
-          setChats(cs);
-          console.log(cs);
-        }
-      );
+    function refreshUsers() {
+      let cs = userProvider.current.getUserChats();
+      setChats(cs);
+      getAllUsers();
     }
 
     function getAllUsers() {
@@ -103,29 +98,25 @@ const Landing = (props) => {
     function listenForChange(c) {
 
       if (!userListening) {
-        userProvider.current.listenForSync(() => {
-          getUserChats();
-        });
+        userProvider.current.listenForSync(refreshUsers);
         setUserListening(true);
 
         // Don't know why but uncommenting this will cause
         // the bottom stuff to not run
 
-        // userProvider.current.listenForLocalWrites(() => {
-        //   getUserChats();
-        //   setUserListening(true);
-        // });
+        userProvider.current.listenForLocalWrites(refreshUsers);
+        setUserListening(true);
       }
 
-      if (!chatListening && c !== undefined && c !== null) {
+      if (!chatListening) {
         console.log("ERE");
         console.log(c);
         console.log(chat);
-        chatProvider.current.listenForSync(refresh, c);
+        chatProvider.current.listenForSync(refresh);
         setChatListening(true);
 
       //
-        chatProvider.current.listenForLocalWrites(refresh, c);
+        chatProvider.current.listenForLocalWrites(refresh);
         setChatListening(true);
       }
     }
@@ -148,8 +139,7 @@ const Landing = (props) => {
                     userProvider.current.connectToStorage(s);
                     userProvider.current.setUser(props.user);
                     userProvider.current.addUser();
-                    getUserChats();
-                    getAllUsers();
+                    refreshUsers();
 
                     dbProvider.current.openDatabase(chatProvider.current.getStorageAddress())
                       .then(s => {
@@ -159,6 +149,7 @@ const Landing = (props) => {
                           listenForChange(chat);
                       })
                       .catch(e => {
+                          console.log(e);
                           setErr(e);
                       })
                   })

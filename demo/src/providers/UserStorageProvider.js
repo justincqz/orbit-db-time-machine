@@ -18,6 +18,7 @@ export default class UserStorageProvider {
   }
 
   getAllUsers() {
+    console.log(this.orbitDBStorage.get(''));
     return this.orbitDBStorage.get('').map(
       c => c._id
     );
@@ -32,7 +33,8 @@ export default class UserStorageProvider {
     let userInfo = this.orbitDBStorage.get(user)[0];
     let userChats = userInfo.chats;
     userChats.push(chat);
-    this.orbitDBStorage.put({"_id": user, "chats": userChats});
+    console.log({...userInfo, "chats": userChats});
+    this.orbitDBStorage.put({...userInfo, "chats": userChats});
     console.log(this.orbitDBStorage.get(""));
   }
 
@@ -45,8 +47,9 @@ export default class UserStorageProvider {
     }
   }
 
-  async getUserChats() {
+  getUserChats() {
     let userChats = this.orbitDBStorage.get(this.currentUser);
+    console.log(this.orbitDBStorage.get(''));
     console.log(this.orbitDBStorage._oplog);
     console.log(userChats);
     if (userChats.length === 0) {
