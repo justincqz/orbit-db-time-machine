@@ -9,8 +9,16 @@ export default class ChatStorageProvider {
     return this.storageAddress;
   }
 
+  connected() {
+    return this.orbitDBStorage !== undefined;
+  }
+
   connectToStorage(s) {
     this.orbitDBStorage = s;
+  }
+
+  setCurrentChat(chat) {
+    this.currentChat = chat;
   }
 
   createNewChat(name, members) {
@@ -25,8 +33,8 @@ export default class ChatStorageProvider {
     this.orbitDBStorage.put(chat);
   }
 
-  getChat(c) {
-    let chat = this.orbitDBStorage.get(c);
+  getChat() {
+    let chat = this.orbitDBStorage.get(this.currentChat);
     console.log(this.orbitDBStorage._oplog);
     console.log(chat);
     if (chat.length === 0) {
@@ -40,13 +48,13 @@ export default class ChatStorageProvider {
     console.log("listening for joins");
     this.orbitDBStorage.events.on('replicated', () => {
       console.log("update!");
-      cb();
+      cb(this.currentChat);
     })
   }
 
   listenForLocalWrites(cb) {
     console.log("listening for writes");
-    this.store.events.on('write', () => {
+    this.orbitDBStorage.events.on('write', () => {
       console.log("update!");
       cb();
     })

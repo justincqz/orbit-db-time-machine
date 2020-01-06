@@ -12,6 +12,7 @@ const Landing = (props) => {
     const [chats, setChats] = useState([]);
     const [users, setUsers] = useState([]);
     const [chat, setChat] = useState(null);
+    const [chatInfo, setChatInfo] = useState({data: []});
     const [err, setErr] = useState("");
     const [loading, setLoading] = useState(true);
     const [userListening, setUserListening] = useState(false);
@@ -20,9 +21,16 @@ const Landing = (props) => {
     const [popupOpen, setPopupOpen] = useState(false);
     const [input, setInput] = useState("");
 
+    const refresh = (c) => {
+      let chatInfo = chatProvider.current.getChat();
+      let chatData = chatInfo.data;
+      setChatInfo(chatData);
+    }
+
+
     function typeNewInput(e) {
       e.preventDefault();
-      let chatInfo = chatProvider.current.getChat(chat);
+      let chatInfo = chatProvider.current.getChat();
       let chatData = chatInfo.data;
       chatData.push(input);
       chatInfo.data = chatData;
@@ -30,12 +38,14 @@ const Landing = (props) => {
       setInput("");
     }
 
-    function getChatData() {
+    function selectChat(chat) {
       console.log(chat);
-      let chatInfo = chatProvider.current.getChat(chat);
-      console.log(chatInfo);
-      return chatInfo.data;
+      setChat(chat);
+      chatProvider.current.setCurrentChat(chat);
+      let chatInfo = chatProvider.current.getChat();
+      setChatInfo(chatInfo);
     }
+
     function createNewChat(e) {
       console.log(newChat);
       e.preventDefault();
@@ -72,14 +82,15 @@ const Landing = (props) => {
     }
 
 
+
     function getChat() {
+      console.log("callback");
+      console.log(chat);
       if (chat) {
-        chatProvider.current.getChat(chat).then(
-          c => {
-            setChat(c);
-            console.log(c);
-          }
-        );
+        chatProvider.current.setCurrentChat(chat);
+        let chatInfo = chatProvider.current.getChat();
+        setChatInfo(chatInfo);
+        console.log("here");
       }
     }
 
@@ -89,13 +100,13 @@ const Landing = (props) => {
     }
 
 
-    function listenForChange() {
+    function listenForChange(c) {
 
       if (!userListening) {
         userProvider.current.listenForSync(() => {
           getUserChats();
-          setUserListening(true);
         });
+        setUserListening(true);
 
         // Don't know why but uncommenting this will cause
         // the bottom stuff to not run
@@ -106,17 +117,16 @@ const Landing = (props) => {
         // });
       }
 
-      if (!chatListening) {
-        chatProvider.current.listenForSync(() => {
-          getChat();
-          setChatListening(true);
-        });
+      if (!chatListening && c !== undefined && c !== null) {
+        console.log("ERE");
+        console.log(c);
+        console.log(chat);
+        chatProvider.current.listenForSync(refresh, c);
+        setChatListening(true);
 
       //
-        chatProvider.current.listenForLocalWrites(() => {
-          getChat();
-          setChatListening(true);
-        });
+        chatProvider.current.listenForLocalWrites(refresh, c);
+        setChatListening(true);
       }
     }
 
@@ -146,7 +156,7 @@ const Landing = (props) => {
                           chatProvider.current.connectToStorage(s);
                           getChat();
                           setLoading(false);
-                          listenForChange();
+                          listenForChange(chat);
                       })
                       .catch(e => {
                           setErr(e);
@@ -163,7 +173,14 @@ const Landing = (props) => {
               })
 
         }
+
     });
+
+    if (chatProvider.current && userProvider.current && chatProvider.current.connected() && userProvider.current.connected()) {
+      console.log("REINITIALIZE!");
+      console.log(chat);
+      listenForChange(chat);
+    }
 
     return (
 
@@ -219,7 +236,7 @@ const Landing = (props) => {
                   ?
                   chats.map(c =>
                     (
-                      <div onClick={() => setChat(c)}>
+                      <div onClick={() => selectChat(c)}>
                         {c}
                       </div>
                     ))
@@ -236,8 +253,7 @@ const Landing = (props) => {
                 (
                   <div>
                     <p>Reading chat</p>
-                    {getChatData().map(d => <div>{d}</div>)}
-
+                    {chatInfo.data.map(d => <div>{d}</div>)}
                     <form onSubmit={(e) => typeNewInput(e)} noValidate autoComplete="off">
                       <div>
                         <input

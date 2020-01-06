@@ -23,6 +23,11 @@ export default class UserStorageProvider {
     );
   }
 
+  connected() {
+    return this.orbitDBStorage !== undefined;
+  }
+
+
   addUserChat(user, chat) {
     let userInfo = this.orbitDBStorage.get(user)[0];
     let userChats = userInfo.chats;
@@ -61,7 +66,7 @@ export default class UserStorageProvider {
 
   listenForLocalWrites(cb) {
     console.log("listening for writes");
-    this.store.events.on('write', () => {
+    this.orbitDBStorage.events.on('write', () => {
       console.log("update!");
       cb();
     })
