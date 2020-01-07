@@ -108,5 +108,4 @@ export {
   addUserIdentities
 };
 
-export type D3Data = D3Data;
 export default D3DataOutput;

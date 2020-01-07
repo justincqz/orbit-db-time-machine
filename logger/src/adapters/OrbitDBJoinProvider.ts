@@ -9,7 +9,7 @@ export default class OrbitDBJoinProvider implements JoinStorageProvider {
   currentUser : string = null;
   orbitDBStorage = null;
 
-  static readonly storageAddress : string = "/orbitdb/zdpuApcbZpiyV3HU5ojrTMuvcBwfdewGQWqQgKU8NfuDUXafW/JoinStorage";
+  static readonly storageAddress : string = "/orbitdb/zdpuApxES1yrUJFC8RyVgxbzGegSoYQnS2VUGg1WPoKC8fixP/JoinStorage";
 
   connectToStorage(s : Store): void {
     this.orbitDBStorage = s;
@@ -246,6 +246,7 @@ export default class OrbitDBJoinProvider implements JoinStorageProvider {
 
     try {
       let storage: Store = await dbProvider.openDatabase(OrbitDBJoinProvider.storageAddress);
+
       storageProvider.connectToStorage(storage);
     } catch (_) {
       console.log("Saving in local storage...");

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import "react-table/react-table.css";
 import { DatabaseProvider } from '../providers/DatabaseProvider';
 import GraphDisplay, { GraphDisplayNodeMouseEvents } from './viewDatabase/GraphDisplay';
-import { D3Data } from '../model/D3Data';
+import { D3Data }  from 'orbit-db-time-machine-logger';
 import DAGNodeTooltip from './viewDatabase/DAGNodeTooltip';
 import storeDisplayStyles from './StoreDisplay.module.css';
 import { NodeProvider } from '../providers/NodeProvider';
@@ -57,6 +57,7 @@ const OrbitDBStoreDisplay: React.FC<{
     } catch (e) {
       // TODO: Error handling.
       console.log("Something went terribly wrong...");
+      console.error(e);
     }
   }
 
@@ -94,6 +95,7 @@ const OrbitDBStoreDisplay: React.FC<{
     } catch (e) {
       // TODO: Error handling.
       console.log("Something went terribly wrong...");
+      console.error(e);
     }
   }
 
