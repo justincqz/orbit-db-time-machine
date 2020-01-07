@@ -176,7 +176,6 @@ const Landing = (props) => {
     }
 
     return (
-
       (loading)
         ?
         (!err)
@@ -218,9 +217,10 @@ const Landing = (props) => {
               </form>
             </Popup>
             <div className={LandingStyles.chatBar}>
-              <div className={LandingStyles.userName}>
-                User: {props.user}
+              <div className={LandingStyles.userWelcome}>
+                Welcome back
               </div>
+              <div className={LandingStyles.userName}>{props.user}</div>
               <div className={LandingStyles.newChat} onClick={() => setPopupOpen(true)}>
                 Create new chat
               </div>
@@ -229,8 +229,8 @@ const Landing = (props) => {
                   ?
                   chats.map(c =>
                     (
-                      <div onClick={() => selectChat(c)}>
-                        {c}
+                      <div className={LandingStyles.chatChannel} onClick={() => selectChat(c)}>
+                        #{c}
                       </div>
                     ))
                   :
@@ -244,20 +244,23 @@ const Landing = (props) => {
               {chat
                 ?
                 (
-                  <div>
-                    <p>Reading chat</p>
-                    {chatInfo.data.map(d => <div>{d}</div>)}
+                  <div className={LandingStyles.chatScreen}>
+                    <p className={LandingStyles.chatName}>#{chat}</p>
+                    <div className={LandingStyles.chatBoxMsgs}>
+                      {chatInfo.data.map(d => <div className={LandingStyles.chatMsg}>>  {d}</div>)}
+                    </div>
                     <form onSubmit={(e) => typeNewInput(e)} noValidate autoComplete="off">
-                      <div>
+                      <div className={LandingStyles.chatInputDiv}>
                         <input
+                          className={LandingStyles.chatInput}
                           type="text"
                           value={input}
+                          placeholder="Type here to chat!"
                           onChange={(e) => {
                             setInput(e.target.value);
                           }}>
                         </input>
                       </div>
-                      <button type='submit'/>
                     </form>
                   </div>
                 )

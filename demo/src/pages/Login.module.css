@@ -1,9 +1,39 @@
 
 .loginContainer {
+    background-color: #f3f3f3ff;
     display: flex;
     height: 100vh;
     width: 100vw;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+}
+
+.title {
+    font-size: 8vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    color: #ff4d80;
+}
+
+.title_2 {
+    font-size: 8vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 300;
+    color: #4f434d;
+}
+
+.titleContainer {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2vh;
+}
+
+.inputBox {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: 2vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 5px;
 }
