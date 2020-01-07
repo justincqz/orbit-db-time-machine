@@ -34,9 +34,13 @@ export default class OrbitDBAdapter implements DatabaseProvider {
     this.ipfs = ipfs;
   }
 
-  static async build(): Promise<OrbitDBAdapter> {
-    const [dbInstance, ipfs] = await this.newDBInstance();
-    return new OrbitDBAdapter(dbInstance, ipfs);
+  static async build(ipfs?: IPFS): Promise<OrbitDBAdapter> {
+    console.log(`the ipfs instance was ${ipfs}`)
+    if (ipfs !== undefined && ipfs !== null) {
+      OrbitDBAdapter.IPFS = ipfs;
+    }
+    const [dbInstance, ipfsInst] = await this.newDBInstance();
+    return new OrbitDBAdapter(dbInstance, ipfsInst);
   }
 
   protected static async newDBInstance(): Promise<[OrbitDB, IPFS]> {

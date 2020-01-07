@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {useDependencyInjector} from "../state/DependencyInjector";
 import LandingStyles from "./Landing.module.css";
 import Popup from "reactjs-popup";
+import Logger from 'orbit-db-time-machine-logger'
 
 const Landing = (props) => {
     const injector = useDependencyInjector();
@@ -147,6 +148,7 @@ const Landing = (props) => {
                           getChat();
                           setLoading(false);
                           listenForChange(chat);
+                          (new Logger(s, dbProvider.current.ipfs)).start()
                       })
                       .catch(e => {
                           console.log(e);

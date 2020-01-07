@@ -5,6 +5,7 @@ import JoinEvent from './model/JoinEvent';
 import JoinStorageProvider from './providers/JoinStorageProvider';
 import Log from 'ipfs-log';
 import OrbitDBJoinProvider from './adapters/OrbitDBJoinProvider';
+import IPFS from 'ipfs';
 
 /**
  * Class to log join events. The events can later be read by the time machine.
@@ -13,13 +14,16 @@ import OrbitDBJoinProvider from './adapters/OrbitDBJoinProvider';
 export default class Logger {
   private readonly store;
   private storageProvider;
+  private readonly ipfs;
 
   /**
    * Create a new logger
    * @param store The orbitdb database to listen for events on
+   * @param ipfs Optionally pass the store's IPFS instance to share
    * @param storageProvider Optionally provide an custom storage provider.
    */
-  constructor(store: Store, storageProvider?: JoinStorageProvider) {
+  constructor(store: Store, ipfs?: IPFS, storageProvider?: JoinStorageProvider) {
+    this.ipfs = ipfs;
     this.store = store;
     if (storageProvider !== undefined && storageProvider !== null) {
       this.storageProvider = storageProvider;
@@ -48,7 +52,7 @@ export default class Logger {
 
     // Check whether our storageProvider has been initialised
     if (this.storageProvider === undefined || this.storageProvider === null) {
-      this.storageProvider = OrbitDBJoinProvider.connectOrReturnLocal().then((sp) => {
+      this.storageProvider = OrbitDBJoinProvider.connectOrReturnLocal(this.ipfs).then((sp) => {
         this.storageProvider = sp;
         this.storageProvider.setUser(this.store._oplog._identity._id);
         this.storageProvider.setDatabase(`${this.store.address.root}/${this.store.address.path}`);

@@ -3,13 +3,14 @@ import JoinEvent from '../model/JoinEvent';
 import Store from 'orbit-db-store';
 import DatabaseProvider from '../providers/DatabaseProvider';
 import { OrbitDBAdapter, LocalStorageJoinProvider } from '..';
+import IPFS from 'ipfs';
 
 export default class OrbitDBJoinProvider implements JoinStorageProvider {
   currentDatabase : string = null;
   currentUser : string = null;
   orbitDBStorage = null;
 
-  static readonly storageAddress : string = "/orbitdb/zdpuApxES1yrUJFC8RyVgxbzGegSoYQnS2VUGg1WPoKC8fixP/JoinStorage";
+  static readonly storageAddress : string = "/orbitdb/zdpuAwbMm3PU9j5EM6AYPHsFReTevFnYqS3Q3azyf2qaKTFSg/JS";
 
   connectToStorage(s : Store): void {
     this.orbitDBStorage = s;
@@ -236,10 +237,10 @@ export default class OrbitDBJoinProvider implements JoinStorageProvider {
    * If connection fails, use a local storage provider.
    * @param dbProvider Optionally pass a DatabaseProvider
    */
-  static async connectOrReturnLocal(dbProvider?: DatabaseProvider): Promise<JoinStorageProvider> {
+  static async connectOrReturnLocal(ipfs?: IPFS, dbProvider?: DatabaseProvider): Promise<JoinStorageProvider> {
 
     if (dbProvider === undefined) {
-      dbProvider = await OrbitDBAdapter.build();
+      dbProvider = await OrbitDBAdapter.build(ipfs);
     }
 
     let storageProvider: JoinStorageProvider = new OrbitDBJoinProvider();
